@@ -14,11 +14,13 @@ function openTab(url) {
 	if (ext && ext.tabs && typeof ext.tabs.create === 'function') {
 		// For `chrome` in Chrome, tabs.create takes a callback. We'll normalize to a Promise.
 		if (typeof ext.tabs.create === 'function' && typeof browser !== 'undefined') {
-			return ext.tabs.create({ url });
+			// default to opening in background so the popup stays open
+			return ext.tabs.create({ url, active: false });
 		}
 		return new Promise((resolve, reject) => {
 			try {
-				ext.tabs.create({ url }, resolve);
+				// default to opening in background so the popup stays open
+				ext.tabs.create({ url, active: false }, resolve);
 			} catch (e) {
 				reject(e);
 			}
@@ -32,12 +34,23 @@ document.addEventListener('DOMContentLoaded', () => {
 	const openBtn = $('#open');
 	const status = $('#status');
 
+		// Ensure the ticker input is focused when the popup opens.
+		// Use a short timeout which helps in some browsers/extension popups.
+		setTimeout(() => {
+			try {
+				tickerInput.focus();
+				if (tickerInput.value) tickerInput.select();
+			} catch (e) {
+				// ignore focus errors
+			}
+		}, 20);
+
 	function showStatus(msg, isError = false) {
 		status.textContent = msg;
 		status.style.color = isError ? 'crimson' : '#333';
 	}
 
-	openBtn.addEventListener('click', async () => {
+	async function openTabsForTicker() {
 		const raw = tickerInput.value;
 		const ticker = normalizeTicker(raw);
 		if (!ticker) {
@@ -66,6 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
 		} catch (err) {
 			console.error(err);
 			showStatus('Failed to open tabs: ' + (err.message || err), true);
+		}
+	}
+
+	openBtn.addEventListener('click', openTabsForTicker);
+
+	// Trigger opening when user presses Enter in the ticker input
+	tickerInput.addEventListener('keydown', (ev) => {
+		if (ev.key === 'Enter' || ev.keyCode === 13) {
+			ev.preventDefault();
+			openTabsForTicker();
 		}
 	});
 });
