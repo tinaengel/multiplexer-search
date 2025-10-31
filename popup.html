@@ -1,0 +1,39 @@
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Multiplexer Search</title>
+		<style>
+			body { font-family: system-ui, -apple-system, Arial, sans-serif; width: 320px; padding: 12px; }
+			label { display: block; margin-top: 8px; }
+			input[type="text"] { width: 100%; padding: 6px; box-sizing: border-box; }
+			.sites { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+			.site { flex: 1 1 48%; }
+			button { margin-top: 12px; padding: 8px 12px; width: 100%; }
+			.small { font-size: 12px; color: #666; margin-top: 6px; }
+		</style>
+	</head>
+	<body>
+		<h3>Multiplexer Search</h3>
+		<label for="ticker">Ticker symbol</label>
+		<input id="ticker" type="text" placeholder="e.g. AAPL" autocomplete="off" />
+
+		<div class="small">Choose sites to open:</div>
+		<div class="sites">
+			<label class="site"><input type="checkbox" data-site="https://www.finanzen.net/suchergebnis.asp?_search={T}" checked /> finanzen.net</label>
+			<label class="site"><input type="checkbox" data-site="https://de.marketscreener.com/suchen/?q={T}" checked /> Marketscreener</label>
+			<label class="site"><input type="checkbox" data-site="https://seekingalpha.com/search?q={T}&type=keyword" checked /> Seeking Alpha</label>
+			<label class="site"><input type="checkbox" data-site="https://www.tipranks.com/stocks/{T}/overview" checked /> TipRanks</label>
+			<label class="site"><input type="checkbox" data-site="https://www.gurufocus.com/stock/{T}/summary" checked /> GuruFocus</label>
+			<label class="site"><input type="checkbox" data-site="https://www.barrons.com/search?query={T}&quotequery={T}&search_keywords={T}&search_statement_type=typed" checked /> Barron's</label>
+            <label class="site"><input type="checkbox" data-site="https://www.investing.com/search?q={T}" checked /> Investing.com</label>
+		</div>
+
+		<button id="open">Open tabs</button>
+		<div id="status" class="small" aria-live="polite"></div>
+
+		<script src="popup.js"></script>
+	</body>
+</html>

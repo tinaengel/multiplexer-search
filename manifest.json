@@ -1,0 +1,14 @@
+
+{
+	"manifest_version": 3,
+	"name": "Multiplexer Search",
+	"description": "Open multiple finance/search pages for a given stock ticker with one click.",
+	"version": "0.1.0",
+	"action": {
+		"default_popup": "popup.html",
+		"default_title": "Multiplexer Search"
+	},
+	"permissions": [
+		"tabs"
+	]
+}
